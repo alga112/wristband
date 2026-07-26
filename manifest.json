@@ -1,0 +1,16 @@
+{
+  "name": "لوحة ولي الأمر — سوار أمان الطفل",
+  "short_name": "أمان الطفل",
+  "description": "تحكم كامل بسوار أمان الطفل عبر SMS — بدون اشتراكات",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ECF4F2",
+  "theme_color": "#0C3B36",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

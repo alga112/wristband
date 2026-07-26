@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة ولي الأمر — سوار أمان الطفل</title>
+<meta name="theme-color" content="#0C3B36">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --pine:#0C3B36;      /* عناوين */
+    --teal:#17635B;      /* أزرار أساسية */
+    --mist:#ECF4F2;      /* خلفية */
+    --amber:#D99A3D;     /* السياج */
+    --coral:#B33A3A;     /* الاتصال/الطوارئ */
+    --ink:#22312F;
+    --card:#FFFFFF;
+    --line:#D5E4E1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:"SF Arabic","Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif;
+    background:var(--mist);color:var(--ink);
+    min-height:100vh;padding:0 0 48px;
+  }
+  header{
+    background:var(--pine);color:#fff;
+    padding:26px 20px 30px;
+    border-bottom:4px solid var(--teal);
+  }
+  header .eyebrow{
+    font-size:12px;letter-spacing:2px;opacity:.75;margin-bottom:6px;
+  }
+  header h1{font-size:24px;font-weight:800;line-height:1.35}
+  header p{font-size:13px;opacity:.85;margin-top:8px;line-height:1.7}
+  main{max-width:520px;margin:0 auto;padding:16px}
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:18px;margin-top:14px;
+  }
+  .card h2{
+    font-size:15px;color:var(--pine);font-weight:800;
+    display:flex;align-items:center;gap:8px;margin-bottom:12px;
+  }
+  .card h2 .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);flex:none}
+  .card.fence h2 .dot{background:var(--amber)}
+  .card.callc h2 .dot{background:var(--coral)}
+  label{font-size:13px;color:#5A6E6B;display:block;margin-bottom:6px}
+  input[type=text],input[type=tel]{
+    width:100%;padding:12px;font-size:16px;direction:ltr;text-align:left;
+    border:1.5px solid var(--line);border-radius:10px;background:#FBFDFC;
+    font-family:inherit;color:var(--ink);
+  }
+  input:focus{outline:2px solid var(--teal);outline-offset:1px}
+  .btn{
+    display:block;width:100%;border:none;cursor:pointer;
+    padding:14px;margin-top:10px;border-radius:11px;
+    font-size:15px;font-weight:700;font-family:inherit;
+    background:var(--teal);color:#fff;text-align:center;
+    transition:transform .08s ease,opacity .15s;
+  }
+  .btn:active{transform:scale(.985)}
+  .btn:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+  .btn.ghost{background:#F0F6F5;color:var(--pine);border:1.5px solid var(--line)}
+  .btn.amber{background:var(--amber)}
+  .btn.coral{background:var(--coral)}
+  .hint{font-size:12px;color:#7B8C89;margin-top:6px;line-height:1.7}
+  .row{display:flex;gap:10px}
+  .row .btn{margin-top:10px}
+  /* ======== العنصر المميز: قرص السياج الحي ======== */
+  .dial{
+    position:relative;height:190px;margin:6px 0 4px;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    background:
+      radial-gradient(circle at center,#F4FAF8 0 38%,transparent 38%),
+      repeating-radial-gradient(circle at center,#E4EFEC 0 1px,transparent 1px 22px);
+    border-radius:12px;border:1px dashed var(--line);
+  }
+  .dial .zone{
+    position:absolute;border-radius:50%;
+    background:rgba(217,154,61,.16);
+    border:2px solid var(--amber);
+    transition:width .15s,height .15s;
+  }
+  .dial .child{
+    position:relative;width:14px;height:14px;border-radius:50%;
+    background:var(--teal);border:3px solid #fff;
+    box-shadow:0 0 0 2px var(--teal);
+  }
+  .dial .radius-label{
+    position:absolute;bottom:10px;inset-inline-start:12px;
+    font-size:13px;font-weight:800;color:var(--amber);
+    background:#fff;padding:3px 10px;border-radius:20px;
+    border:1px solid var(--line);
+  }
+  input[type=range]{width:100%;accent-color:var(--amber);margin-top:8px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .chips .btn{flex:1;min-width:70px;margin-top:6px;padding:11px 6px;font-size:14px}
+  .coords{display:flex;gap:8px}
+  .coords input{flex:1}
+  footer{
+    max-width:520px;margin:22px auto 0;padding:0 20px;
+    font-size:11.5px;color:#7B8C89;line-height:1.9;text-align:center;
+  }
+  #map{height:340px;border-radius:12px;margin-top:12px;
+       border:1px solid var(--line);display:none}
+  @media (prefers-reduced-motion:reduce){
+    .btn,.dial .zone{transition:none}
+  }
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">مشروع رقم 1350 — نموذج أولي</div>
+  <h1>لوحة ولي الأمر</h1>
+  <p>تحكّم كامل بسوار طفلك عبر رسائل SMS مباشرة — بدون إنترنت، بدون حساب، بدون أي اشتراك. كل زر يفتح تطبيق الرسائل والأمر جاهز، فقط اضغط إرسال.</p>
+</header>
+
+<main>
+
+  <!-- تنبيه أجهزة الكمبيوتر -->
+  <div class="card" id="desktopNote" style="display:none;border-color:var(--amber)">
+    <p class="hint" style="margin:0">
+      يبدو أنك تفتح اللوحة من كمبيوتر. أزرار الرسائل والاتصال مصممة للجوال —
+      افتح هذه الصفحة على جوالك وستعمل مباشرة. ولو تبغى تجرب من ويندوز:
+      اختر «رابط الهاتف» (Phone Link) من القائمة اللي تظهر لك واضغط «دومًا»،
+      بشرط أن يكون جوالك (أندرويد) مربوطًا به مسبقًا، وحينها تُرسل الرسائل
+      والمكالمات فعليًا عبر جوالك.
+    </p>
+  </div>
+
+  <!-- رقم السوار -->
+  <section class="card">
+    <h2><span class="dot"></span>رقم شريحة السوار</h2>
+    <label for="simNum">الرقم بالصيغة الدولية</label>
+    <input type="tel" id="simNum" value="" placeholder="+9665XXXXXXXX">
+    <p class="hint">هذا رقم شريحة STC المركّبة داخل السوار. عدّله مرة واحدة وكل الأزرار تحته تستخدمه تلقائياً.</p>
+  </section>
+
+  <!-- أوامر سريعة -->
+  <section class="card">
+    <h2><span class="dot"></span>الموقع والحالة</h2>
+    <div class="row">
+      <button class="btn" onclick="sms('LOC')">اطلب الموقع الآن</button>
+      <button class="btn ghost" onclick="sms('STATUS')">اطلب الحالة</button>
+    </div>
+    <p class="hint">يرد السوار برابط خرائط قوقل لموقع الطفل، أو بتقرير البطارية والإشارة والسياج.</p>
+  </section>
+
+  <!-- خريطة موقع السوار -->
+  <section class="card">
+    <h2><span class="dot"></span>خريطة موقع السوار</h2>
+    <label for="pasteLoc">الصق رسالة السوار أو رابط الموقع أو الإحداثيات</label>
+    <input type="text" id="pasteLoc"
+           placeholder="مثال: https://maps.google.com/?q=21.2854,40.4211">
+    <button class="btn" onclick="pasteAndShow()">الصق آخر رسالة وأظهر الموقع</button>
+    <div class="row">
+      <button class="btn ghost" onclick="showOnMap()">اعرض على الخريطة</button>
+      <button class="btn ghost" onclick="openInGoogle()">افتح في خرائط قوقل</button>
+    </div>
+    <div id="map" role="img" aria-label="خريطة موقع السوار"></div>
+    <p class="hint">
+      اضغط «اطلب الموقع الآن»، وأول ما يوصلك رد السوار انسخه والصقه هنا —
+      تشوف موقع الطفل على الخريطة، ومعه دائرة السياج الآمن إن كانت
+      إحداثياته مكتوبة تحت. الخريطة تحتاج إنترنت على جهازك أنت فقط،
+      والسوار يظل يعمل بدون أي بيانات.
+    </p>
+  </section>
+
+  <!-- الاتصال -->
+  <section class="card callc">
+    <h2><span class="dot"></span>الاتصال الصوتي</h2>
+    <button class="btn coral" onclick="callWristband()">اتصل بالسوار</button>
+    <button class="btn ghost" onclick="sms('CALL')">اطلب من السوار الاتصال بي</button>
+    <p class="hint">اتصالك يُرَدّ عليه تلقائياً في السوار. أي رقم غير رقمك يُرفض لحماية خصوصية الطفل.</p>
+  </section>
+
+  <!-- السياج الآمن -->
+  <section class="card fence">
+    <h2><span class="dot"></span>السياج الآمن (Geofencing)</h2>
+
+    <div class="dial" aria-hidden="true">
+      <div class="zone" id="zoneCircle"></div>
+      <div class="child"></div>
+      <div class="radius-label" id="radiusLabel">300 م</div>
+    </div>
+    <label for="radius">نصف قطر المنطقة الآمنة</label>
+    <input type="range" id="radius" min="50" max="1000" step="50" value="300"
+           oninput="updateDial()">
+
+    <button class="btn amber" onclick="sms('FENCE HERE '+radiusVal())">
+      فعّل السياج حول موقع الطفل الحالي
+    </button>
+
+    <label style="margin-top:14px" for="lat">أو حدد مركز السياج بإحداثيات (من خرائط قوقل)</label>
+    <div class="coords">
+      <input type="text" id="lat" placeholder="Lat مثال 21.2854" inputmode="decimal">
+      <input type="text" id="lon" placeholder="Lon مثال 40.4211" inputmode="decimal">
+    </div>
+    <div class="row">
+      <button class="btn ghost" onclick="useMyLocation()">استخدم موقعي أنا</button>
+      <button class="btn amber" onclick="fenceCoords()">فعّل بهذه الإحداثيات</button>
+    </div>
+    <button class="btn ghost" onclick="sms('FENCE OFF')">أوقف السياج</button>
+    <p class="hint">عند خروج الطفل من الدائرة يصلك تنبيه فوري بالموقع، وعند رجوعه تصلك رسالة اطمئنان.</p>
+  </section>
+
+  <!-- التحديث التلقائي -->
+  <section class="card">
+    <h2><span class="dot"></span>الموقع التلقائي الدوري</h2>
+    <div class="chips">
+      <button class="btn ghost" onclick="sms('AUTO 15')">كل 15 د</button>
+      <button class="btn ghost" onclick="sms('AUTO 30')">كل 30 د</button>
+      <button class="btn ghost" onclick="sms('AUTO 60')">كل ساعة</button>
+      <button class="btn ghost" onclick="sms('AUTO OFF')">إيقاف</button>
+    </div>
+    <p class="hint">تذكير: كل تحديث تلقائي يستهلك رسالة SMS واحدة من رصيد شريحة السوار.</p>
+  </section>
+
+  <!-- مساعدة -->
+  <section class="card">
+    <h2><span class="dot"></span>مرجع الأوامر</h2>
+    <button class="btn ghost" onclick="sms('HELP')">اطلب قائمة الأوامر من السوار</button>
+    <p class="hint" style="direction:ltr;text-align:left">
+      LOC · STATUS · FENCE HERE 300 · FENCE lat,lon,r · FENCE OFF · AUTO 30 · AUTO OFF · CALL
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  نموذج أولي هندسي وفق نطاق العرض رقم 1350 (المراجعة 02) — منصة مراقبة مجانية بالكامل تعمل عبر SMS.<br>
+  احفظ هذه الصفحة على شاشة جوالك الرئيسية لتعمل كتطبيق بدون إنترنت.
+</footer>
+
+<script>
+  /* ================= الإعدادات ================= */
+  /* الرقم لا يُخزَّن داخل الموقع العام حفاظًا على خصوصية الطفل.
+     يُقرأ من رابطك المرجعي الخاص:  .../#num=+9665XXXXXXXX  */
+  var DEFAULT_SIM = "";
+  (function(){
+    var m = decodeURIComponent(location.hash || '').match(/num=(\+?\d{9,15})/);
+    var v = m ? m[1] : DEFAULT_SIM;
+    if (v) document.getElementById('simNum').value = v;
+  })();
+
+  function simNumber(){
+    var n = document.getElementById('simNum').value.trim();
+    return n.replace(/\s+/g,'');
+  }
+
+  /* iOS يستخدم & بدل ? في روابط sms */
+  function isIOS(){
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  function sms(body){
+    var num = simNumber();
+    if(!num || num.indexOf('X') !== -1){
+      alert('اكتب رقم شريحة السوار أولاً في أعلى الصفحة.');
+      return;
+    }
+    var sep = isIOS() ? '&' : '?';
+    window.location.href = 'sms:' + num + sep + 'body=' + encodeURIComponent(body);
+  }
+
+  function callWristband(){
+    var num = simNumber();
+    if(!num || num.indexOf('X') !== -1){
+      alert('اكتب رقم شريحة السوار أولاً في أعلى الصفحة.');
+      return;
+    }
+    window.location.href = 'tel:' + num;
+  }
+
+  /* ================= السياج ================= */
+  function radiusVal(){
+    return document.getElementById('radius').value;
+  }
+
+  function updateDial(){
+    var r = parseInt(radiusVal(), 10);
+    // تحويل 50..1000 متر إلى قطر 40..170 بكسل داخل القرص
+    var px = 40 + (r - 50) / (1000 - 50) * 130;
+    var z = document.getElementById('zoneCircle');
+    z.style.width  = px + 'px';
+    z.style.height = px + 'px';
+    document.getElementById('radiusLabel').textContent = r + ' م';
+  }
+  updateDial();
+
+  function fenceCoords(){
+    var la = document.getElementById('lat').value.trim();
+    var lo = document.getElementById('lon').value.trim();
+    if(!la || !lo || isNaN(parseFloat(la)) || isNaN(parseFloat(lo))){
+      alert('اكتب إحداثيات صحيحة، أو انسخها من خرائط قوقل (ضغطة مطوّلة على أي نقطة).');
+      return;
+    }
+    sms('FENCE ' + la + ',' + lo + ',' + radiusVal());
+  }
+
+  function useMyLocation(){
+    if(!navigator.geolocation){
+      alert('المتصفح لا يدعم تحديد الموقع.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(function(pos){
+      document.getElementById('lat').value = pos.coords.latitude.toFixed(6);
+      document.getElementById('lon').value = pos.coords.longitude.toFixed(6);
+    }, function(){
+      alert('تعذّر تحديد موقعك. فعّل خدمة الموقع للمتصفح وحاول مرة أخرى.');
+    });
+  }
+
+  /* ================= الخريطة ================= */
+  var map = null, marker = null, fenceCircle = null;
+  var trail = [], trailLine = null;
+
+  function extractCoords(t){
+    var m = t.match(/(-?\d{1,2}\.\d{3,})[,\s]+(-?\d{1,3}\.\d{3,})/);
+    if(!m) return null;
+    return [parseFloat(m[1]), parseFloat(m[2])];
+  }
+
+  function showOnMap(silent){
+    var t = document.getElementById('pasteLoc').value;
+    var c = extractCoords(t);
+    if(!c){
+      if(!silent) alert('ما قدرت أقرأ الإحداثيات. الصق رابط السوار كاملاً أو إحداثيات مثل: 21.2854,40.4211');
+      return;
+    }
+    if(typeof L === 'undefined'){
+      if(!silent) alert('الخريطة تحتاج اتصال إنترنت على هذا الجهاز. استخدم زر «افتح في خرائط قوقل» بدلاً منها.');
+      return;
+    }
+    var el = document.getElementById('map');
+    el.style.display = 'block';
+    if(!map){
+      map = L.map('map').setView(c, 17);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(map);
+    } else {
+      map.setView(c, map.getZoom() < 15 ? 17 : map.getZoom());
+    }
+
+    /* مسار الحركة: نقاط التحديثات السابقة بخط متصل */
+    var last = trail[trail.length - 1];
+    if(!last || last[0] !== c[0] || last[1] !== c[1]){
+      trail.push(c);
+      if(trail.length > 30) trail.shift();
+      L.circleMarker(c, {radius:4, color:'#17635B', fillOpacity:.9}).addTo(map);
+      if(trailLine) trailLine.remove();
+      if(trail.length > 1){
+        trailLine = L.polyline(trail, {color:'#17635B', weight:2.5,
+                                       opacity:.55, dashArray:'4 6'}).addTo(map);
+      }
+    }
+
+    if(marker) marker.remove();
+    marker = L.marker(c).addTo(map)
+              .bindPopup('موقع السوار — آخر تحديث الآن').openPopup();
+
+    if(fenceCircle) fenceCircle.remove();
+    var la = parseFloat(document.getElementById('lat').value);
+    var lo = parseFloat(document.getElementById('lon').value);
+    if(!isNaN(la) && !isNaN(lo)){
+      fenceCircle = L.circle([la, lo], {
+        radius: parseInt(radiusVal(), 10),
+        color:'#D99A3D', fillColor:'#D99A3D', fillOpacity:.15
+      }).addTo(map);
+    }
+    setTimeout(function(){ map.invalidateSize(); }, 200);
+  }
+
+  /* ضغطة واحدة: يقرأ الحافظة ويعرض الموقع مباشرة */
+  function pasteAndShow(){
+    if(navigator.clipboard && navigator.clipboard.readText){
+      navigator.clipboard.readText().then(function(t){
+        document.getElementById('pasteLoc').value = t;
+        showOnMap();
+      }).catch(function(){
+        alert('اسمح للمتصفح بقراءة الحافظة، أو الصق الرسالة يدويًا في الخانة.');
+      });
+    } else {
+      alert('متصفحك لا يدعم اللصق التلقائي — الصق الرسالة يدويًا في الخانة.');
+    }
+  }
+
+  /* عرض تلقائي فور اللصق اليدوي في الخانة */
+  document.getElementById('pasteLoc').addEventListener('input', function(){
+    if(extractCoords(this.value)) showOnMap(true);
+  });
+
+  function openInGoogle(){
+    var c = extractCoords(document.getElementById('pasteLoc').value);
+    if(!c){
+      alert('الصق الرابط أو الإحداثيات أولاً.');
+      return;
+    }
+    window.open('https://maps.google.com/?q=' + c[0] + ',' + c[1], '_blank');
+  }
+
+  /* إظهار تنبيه الكمبيوتر عند الحاجة */
+  if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+    document.getElementById('desktopNote').style.display = 'block';
+  }
+
+  /* تسجيل خدمة العمل دون اتصال — يجعل اللوحة تطبيقًا قابلًا للتثبيت */
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+</script>
+</body>
+</html>
