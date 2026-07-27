@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تثبيت تطبيق أمان الطفل</title>
+<meta name="theme-color" content="#0C3B36">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --pine:#0C3B36; --teal:#17635B; --mist:#ECF4F2;
+    --amber:#D99A3D; --ink:#22312F; --card:#FFF; --line:#D5E4E1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"SF Arabic","Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif;
+    background:var(--mist);color:var(--ink);padding:0 0 48px;
+  }
+  header{
+    background:var(--pine);color:#fff;padding:30px 20px 34px;
+    border-bottom:4px solid var(--teal);text-align:center;
+  }
+  header img{width:74px;height:74px;border-radius:18px;margin-bottom:14px}
+  header h1{font-size:22px;font-weight:800}
+  header p{font-size:13px;opacity:.85;margin-top:8px;line-height:1.8}
+  main{max-width:520px;margin:0 auto;padding:16px}
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:18px;margin-top:14px;
+  }
+  .card h2{
+    font-size:15px;color:var(--pine);font-weight:800;margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .card h2 .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);flex:none}
+  .card.apk{border-color:var(--teal);border-width:2px}
+  .card.apk h2 .dot{background:var(--amber)}
+  .btn{
+    display:block;width:100%;text-decoration:none;text-align:center;
+    padding:15px;margin-top:12px;border-radius:11px;
+    font-size:16px;font-weight:800;font-family:inherit;
+    background:var(--teal);color:#fff;border:none;cursor:pointer;
+  }
+  .btn.ghost{background:#F0F6F5;color:var(--pine);border:1.5px solid var(--line)}
+  .btn:active{transform:scale(.985)}
+  ol{margin:10px 20px 0;padding:0;font-size:13.5px;line-height:2;color:#4A5B58}
+  .hint{font-size:12.5px;color:#7B8C89;margin-top:10px;line-height:1.9}
+  .tag{
+    display:inline-block;font-size:11px;font-weight:700;
+    background:var(--mist);color:var(--teal);
+    padding:3px 10px;border-radius:20px;margin-inline-start:6px;
+  }
+  footer{
+    max-width:520px;margin:20px auto 0;padding:0 20px;text-align:center;
+    font-size:11.5px;color:#7B8C89;line-height:1.9;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="icon-192.png" alt="">
+  <h1>تطبيق أمان الطفل</h1>
+  <p>تتبع موقع الطفل، منطقة آمنة، واتصال مباشر — بدون اشتراكات.<br>اختر طريقة التثبيت المناسبة لجهازك.</p>
+</header>
+
+<main>
+
+  <!-- أندرويد -->
+  <section class="card apk" id="cardApk">
+    <h2><span class="dot"></span>أندرويد <span class="tag">تطبيق كامل</span></h2>
+    <a class="btn" href="wristband.apk" download>تحميل التطبيق (APK)</a>
+    <ol>
+      <li>اضغط الزر وانتظر انتهاء التحميل.</li>
+      <li>افتح الملف من شريط الإشعارات أو مجلد التنزيلات.</li>
+      <li>لو ظهر تحذير «مصادر غير معروفة» اضغط «الإعدادات» ثم فعّل السماح لهذا المتصفح.</li>
+      <li>اضغط «تثبيت» — تظهر أيقونة التطبيق على شاشتك.</li>
+    </ol>
+    <p class="hint">التحذير طبيعي لأن التطبيق يُثبَّت مباشرة وليس عبر متجر Play.</p>
+  </section>
+
+  <!-- آيفون -->
+  <section class="card" id="cardIos">
+    <h2><span class="dot"></span>آيفون / آيباد</h2>
+    <a class="btn ghost" href="./">افتح التطبيق في المتصفح</a>
+    <ol>
+      <li>افتح الرابط أعلاه من متصفح <strong>Safari</strong>.</li>
+      <li>اضغط زر المشاركة (المربع مع السهم للأعلى).</li>
+      <li>اختر <strong>«إضافة إلى الشاشة الرئيسية»</strong>.</li>
+      <li>اضغط «إضافة» — تظهر الأيقونة كتطبيق عادي.</li>
+    </ol>
+  </section>
+
+  <!-- كمبيوتر -->
+  <section class="card" id="cardPc">
+    <h2><span class="dot"></span>كمبيوتر (ويندوز / ماك)</h2>
+    <a class="btn ghost" href="./">افتح التطبيق</a>
+    <ol>
+      <li>افتح الرابط بمتصفح Chrome أو Edge.</li>
+      <li>اضغط أيقونة التثبيت ⊕ في شريط العنوان (يمين الرابط).</li>
+      <li>اختر <strong>«تثبيت»</strong> — تنزل أيقونة التطبيق على سطح المكتب.</li>
+    </ol>
+    <p class="hint">أزرار الرسائل والاتصال مصممة للجوال؛ على الكمبيوتر تحتاج تطبيق «رابط الهاتف» مرتبطًا بجوال أندرويد.</p>
+  </section>
+
+</main>
+
+<footer>
+  نموذج أولي هندسي — مشروع رقم 1350.<br>
+  التطبيق يعمل عبر رسائل SMS مباشرة مع السوار، بدون إنترنت وبدون اشتراكات.
+</footer>
+
+<script>
+  /* ترتيب البطاقات حسب جهاز الزائر: الأنسب أولاً */
+  (function(){
+    var ua = navigator.userAgent;
+    var main = document.querySelector('main');
+    var apk = document.getElementById('cardApk');
+    var ios = document.getElementById('cardIos');
+    var pc  = document.getElementById('cardPc');
+    if (/iPhone|iPad|iPod/i.test(ua)) {
+      main.prepend(ios); apk.style.opacity = '.6';
+    } else if (/Android/i.test(ua)) {
+      main.prepend(apk);
+    } else {
+      main.prepend(pc); apk.style.opacity = '.6';
+    }
+  })();
+</script>
+</body>
+</html>

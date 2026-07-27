@@ -240,13 +240,27 @@
 
 <script>
   /* ================= الإعدادات ================= */
-  /* الرقم لا يُخزَّن داخل الموقع العام حفاظًا على خصوصية الطفل.
-     يُقرأ من رابطك المرجعي الخاص:  .../#num=+9665XXXXXXXX  */
+  /* الرقم يُحفظ داخل جهاز الأب فقط بعد أول إدخال، ولا يُرفع لأي خادم.
+     يمكن أيضًا تمريره عبر رابط خاص:  .../#num=+9665XXXXXXXX  */
   var DEFAULT_SIM = "";
   (function(){
+    var box = document.getElementById('simNum');
+    var saved = "";
+    try { saved = localStorage.getItem('wb_sim') || ""; } catch(e){}
     var m = decodeURIComponent(location.hash || '').match(/num=(\+?\d{9,15})/);
-    var v = m ? m[1] : DEFAULT_SIM;
-    if (v) document.getElementById('simNum').value = v;
+    var v = m ? m[1] : (saved || DEFAULT_SIM);
+    if (v) box.value = v;
+
+    /* احفظ أي رقم صالح يكتبه الأب مرة واحدة */
+    function save(){
+      var n = box.value.trim().replace(/\s+/g,'');
+      if (/^\+?\d{9,15}$/.test(n)) {
+        try { localStorage.setItem('wb_sim', n); } catch(e){}
+      }
+    }
+    box.addEventListener('change', save);
+    box.addEventListener('blur', save);
+    if (m) save();
   })();
 
   function simNumber(){
