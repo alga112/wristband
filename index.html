@@ -134,12 +134,25 @@
     </p>
   </div>
 
-  <!-- رقم السوار -->
+  <!-- الأرقام -->
   <section class="card">
-    <h2><span class="dot"></span>رقم شريحة السوار</h2>
-    <label for="simNum">الرقم بالصيغة الدولية</label>
+    <h2><span class="dot"></span>إعداد الأرقام</h2>
+    <label for="simNum">رقم شريحة السوار (الموجودة في جهاز الطفل)</label>
     <input type="tel" id="simNum" value="" placeholder="+9665XXXXXXXX">
-    <p class="hint">هذا رقم شريحة STC المركّبة داخل السوار. عدّله مرة واحدة وكل الأزرار تحته تستخدمه تلقائياً.</p>
+    <label for="myNum" style="margin-top:14px">رقم جوالك (ولي الأمر)</label>
+    <input type="tel" id="myNum" value="" placeholder="+9665XXXXXXXX">
+    <p class="hint">يُحفظ الرقمان داخل جهازك فقط، ولا يُرسلان إلى أي خادم. تكتبهما مرة واحدة فقط.</p>
+  </section>
+
+  <!-- الربط لأول مرة -->
+  <section class="card fence" id="pairCard">
+    <h2><span class="dot"></span>الخطوة الأولى: ربط السوار بجوالك</h2>
+    <button class="btn amber" onclick="sms('PAIR 1350')">ربط السوار بجوالي الآن</button>
+    <p class="hint">
+      تُرسَل رسالة ربط واحدة للسوار فيسجّل رقمك كولي أمر معتمد، ويصلك رد تأكيد.
+      بعدها لن يستجيب السوار لأي رقم آخر. تُنفَّذ هذه الخطوة مرة واحدة فقط عند أول استخدام.
+    </p>
+    <button class="btn ghost" onclick="sms('WHO')" style="margin-top:14px">من المسجّل حالياً؟</button>
   </section>
 
   <!-- أوامر سريعة -->
@@ -240,27 +253,31 @@
 
 <script>
   /* ================= الإعدادات ================= */
-  /* الرقم يُحفظ داخل جهاز الأب فقط بعد أول إدخال، ولا يُرفع لأي خادم.
-     يمكن أيضًا تمريره عبر رابط خاص:  .../#num=+9665XXXXXXXX  */
-  var DEFAULT_SIM = "";
+  /* الرقمان يُحفظان داخل جهاز ولي الأمر فقط، ولا يُرفعان لأي خادم. */
   (function(){
     var box = document.getElementById('simNum');
-    var saved = "";
-    try { saved = localStorage.getItem('wb_sim') || ""; } catch(e){}
-    var m = decodeURIComponent(location.hash || '').match(/num=(\+?\d{9,15})/);
-    var v = m ? m[1] : (saved || DEFAULT_SIM);
-    if (v) box.value = v;
+    var me  = document.getElementById('myNum');
+    try {
+      box.value = localStorage.getItem('wb_sim') || "";
+      me.value  = localStorage.getItem('wb_me')  || "";
+    } catch(e){}
 
-    /* احفظ أي رقم صالح يكتبه الأب مرة واحدة */
-    function save(){
-      var n = box.value.trim().replace(/\s+/g,'');
-      if (/^\+?\d{9,15}$/.test(n)) {
-        try { localStorage.setItem('wb_sim', n); } catch(e){}
-      }
+    var m = decodeURIComponent(location.hash || '').match(/num=(\+?\d{9,15})/);
+    if (m) box.value = m[1];
+
+    function saver(el, key){
+      return function(){
+        var n = el.value.trim().replace(/\s+/g,'');
+        if (/^\+?\d{9,15}$/.test(n)) {
+          try { localStorage.setItem(key, n); } catch(e){}
+        }
+      };
     }
-    box.addEventListener('change', save);
-    box.addEventListener('blur', save);
-    if (m) save();
+    box.addEventListener('change', saver(box, 'wb_sim'));
+    box.addEventListener('blur',   saver(box, 'wb_sim'));
+    me.addEventListener('change',  saver(me,  'wb_me'));
+    me.addEventListener('blur',    saver(me,  'wb_me'));
+    if (m) saver(box, 'wb_sim')();
   })();
 
   function simNumber(){
